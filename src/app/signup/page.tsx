@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { axios } from "axios";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+
+    const router = useRouter();
 
     const[user, setUser] = useState({
         email: "",
@@ -13,18 +16,50 @@ export default function SignupPage() {
         password: ""
     });
 
-    const onSignup = () => {
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
 
+    const [loading, setLoading] = React.useState(false);
+
+    useEffect(() => {
+        if(user.email.length > 0 && user.username.length > 0 && user.password.length > 0) {
+            setButtonDisabled(false);
+        }
+        else {
+            setButtonDisabled(true);
+        }
+    }, [user])
+
+    const onSignup = async () => {
+        try {
+
+            setLoading(true);
+            const response = await axios.post("/api/users/signup", user);
+            
+            console.log("Signup success ", response.data);
+            toast.success("Account created successfully!");
+
+            router.push("/login");
+
+        } catch (error: any) {
+
+            toast.error(error.message);
+            console.log("Signup failed ", error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
     }
 
     return(
-        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-pink-200 px-4">
 
             <div className="w-full max-w-md rounded-2xl bg-pink-900 p-8 shadow-2xl border border-pink-800">
 
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-white">
-                        Create Account
+                        {loading ? "Processing..." : "Create Account" }
                     </h1>
 
                     <p className="mt-2 text-sm text-gray-400">
@@ -118,10 +153,11 @@ export default function SignupPage() {
                     className="w-full p-3 rounded-lg bg-pink-600 text-white 
                     font-semibold hover:bg-pink-700 
                     active:scale-[0.98] transition-all 
-                    focus:outline-none focus:ring-2 focus:ring-white
-                    focus:ring-offset-2 focus:ring-offset-gray-900"
+                    focus:outline-none focus:ring-2 focus:ring-white"
                 >
-                    Create Account
+                    {
+                        buttonDisabled? "No SignUp" : "SignUp"
+                    }
                 </button>
 
                 <div className="text-center mt-6">
