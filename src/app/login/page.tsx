@@ -1,20 +1,59 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { axios } from "axios";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function LoginPage() {
+
+    const router = useRouter();
+
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const[user, setUser] = useState({
         email: "",
         password: ""
     });
 
-    const onLogin = () => {
+    const onLogin = async () => {
+
+        try {
+
+            setLoading(true);
+            const response = await axios.post("/api/users/login", user);
+
+            console.log("Login success", response.data);
+            toast.success("Login Successful!");
+
+            router.push("/profile");
+            
+        } catch (error: any) {
+            
+            console.log("Login Failed",error.message);
+            toast.error("Login Failed! Please try again");
+
+        }
+        finally {
+
+            setLoading(false);  
+
+        }
 
     }
+
+    useEffect(() => {
+
+        if(user.email.length > 0 && user.password.length > 0) {
+            setButtonDisabled(false);
+        }
+        else {
+            setButtonDisabled(true);
+        }
+    }, [user])
 
     return(
         <div className="min-h-screen flex items-center justify-center bg-pink-200 px-4">
@@ -27,7 +66,7 @@ export default function LoginPage() {
                     </h1>
 
                     <p className="mt-2 text-sm text-gray-400">
-                        Login to your account to continue
+                        {loading ? "Processing..." : "Login to your account to continue" }
                     </p>
                 </div>
 
@@ -93,7 +132,7 @@ export default function LoginPage() {
                     focus:outline-none focus:ring-2 focus:ring-white
                     focus:ring-offset-2 focus:ring-offset-gray-900"
                 >
-                    Login
+                    {buttonDisabled ? "Please fill all the fields" : loading ? "Logging in..." : "Login"}
                 </button>
 
                 <div className="text-center mt-6">
