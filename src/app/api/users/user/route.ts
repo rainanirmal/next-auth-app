@@ -1,37 +1,45 @@
 import { getDataFromToken } from "@/src/helpers/getDataFromToken";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/src/models/userModel";
-import { connect } from "@/src/dbConfig/dbConfig"; 
+import { connect } from "@/src/dbConfig/dbConfig";
 
 connect();
 
 export async function GET(request: NextRequest) {
+  try {
+    const userId = await getDataFromToken(request);
+    console.log("User ID from token:", userId);
 
-    try {
+    const user = await User.findOne({ _id: userId }).select("-password");
+    console.log("User fetched from database:", user);
 
-        const userId = getDataFromToken(request);
-
-        const user = await User.findById(userId).select('-password');
-
-        return NextResponse.json(
-            {
-                message: "User fetched successfully",
-                data: user
-            },
-            {
-                status: 200
-            }
-        )  
-        
-    } catch (error:any) {
-        
-        return NextResponse.json(
-            {
-                error: error.message
-            },
-            {
-                status: 400
-            }
-        )
+    if (!user) {
+      return NextResponse.json(
+        { 
+            error: "User not found" 
+        }, 
+        { 
+            status: 404 
+        });
     }
+
+    return NextResponse.json(
+      {
+        message: "User fetched successfully",
+        data: user,
+      },
+      {
+        status: 200,
+      },
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        error: error.message,
+      },
+      {
+        status: 400,
+      },
+    );
+  }
 }
