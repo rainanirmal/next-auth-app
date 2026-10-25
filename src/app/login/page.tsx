@@ -55,99 +55,118 @@ export default function LoginPage() {
         }
     }, [user])
 
-    return(
-        <div className="min-h-screen flex items-center justify-center bg-pink-200 px-4">
+return (
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-br from-pink-100 via-rose-50 to-pink-200 px-4 py-12">
 
-            <div className="w-full max-w-md rounded-2xl bg-pink-900 p-8 shadow-2xl border border-pink-800">
+        <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-pink-300/40 blur-3xl" />
+        <div className="absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-rose-300/40 blur-3xl" />
 
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white">
-                        Welcome Back
-                    </h1>
+        <div className="relative w-full max-w-md rounded-4xl border border-white/80 bg-white/80 p-7 shadow-2xl shadow-pink-300/30 backdrop-blur-xl sm:p-9">
 
-                    <p className="mt-2 text-sm text-gray-400">
-                        {loading ? "Processing..." : "Login to your account to continue" }
-                    </p>
+            {/* Header */}
+            <div className="mb-8 text-center">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-linear-to-br from-pink-200 to-rose-300 text-4xl shadow-lg shadow-pink-200">
+                    ♡
                 </div>
 
-                <div className="mb-5">
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                    >
-                        Email
-                    </label>
+                <h1 className="mt-5 text-3xl font-extrabold tracking-tight text-rose-900">
+                    Welcome Back
+                </h1>
 
-                    <input
-                        className="w-full p-3 bg-pink-300 border border-pink-900 rounded-lg
-                        text-white placeholder-gray-500
-                        focus:outline-none focus:ring-2 focus:ring-white
-                        focus:border-transparent transition"
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={user.email}
-                        onChange={(e) =>
-                            setUser({
-                                ...user,
-                                email: e.target.value,
-                            })
-                        }
-                        placeholder="Enter your email"
-                    />
+                <div className="mt-3 flex items-center justify-center gap-3">
+                    <span className="h-px w-10 bg-pink-300" />
+                    <span className="text-lg text-pink-500">✦</span>
+                    <span className="h-px w-10 bg-pink-300" />
                 </div>
 
-                <div className="mb-6">
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-gray-300 mb-2"
-                    >
-                        Password
-                    </label>
-
-                    <input
-                        className="w-full p-3 bg-pink-300 border border-pink-900 rounded-lg
-                        text-white placeholder-gray-500
-                        focus:outline-none focus:ring-2 focus:ring-white
-                        focus:border-transparent transition"
-                        type="password"
-                        name="password"
-                        id="password"
-                        value={user.password}
-                        onChange={(e) =>
-                            setUser({
-                                ...user,
-                                password: e.target.value,
-                            })
-                        }
-                        placeholder="Enter your password"
-                    />
-                </div>
-
-                <button
-                    onClick={onLogin}
-                    className="w-full p-3 rounded-lg bg-pink-600 text-white
-                    font-semibold hover:bg-pink-700
-                    active:scale-[0.98] transition-all
-                    focus:outline-none focus:ring-2 focus:ring-white
-                    focus:ring-offset-2 focus:ring-offset-gray-900"
-                >
-                    {buttonDisabled ? "Please fill all the fields" : loading ? "Logging in..." : "Login"}
-                </button>
-
-                <div className="text-center mt-6">
-                    <p className="text-sm text-gray-400">
-                        Don't have an account?{" "}
-                        <Link
-                            href="/signup"
-                            className="text-blue-400 hover:text-blue-300 font-medium transition"
-                        >
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
-
+                <p className="mt-3 text-sm text-rose-800/70">
+                    {loading
+                        ? "Processing your login..."
+                        : "Login to your account to continue"}
+                </p>
             </div>
+
+            <div className="mb-5">
+                <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-semibold text-rose-900"
+                >
+                    Email Address
+                </label>
+
+                <input
+                    className="w-full rounded-xl border border-pink-200 bg-pink-50/70 p-3.5 text-rose-950 placeholder:text-rose-300 outline-none transition duration-200 focus:border-pink-400 focus:bg-white focus:ring-4 focus:ring-pink-100"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={user.email}
+                    onChange={(e) =>
+                        setUser({
+                            ...user,
+                            email: e.target.value,
+                        })
+                    }
+                    placeholder="Enter your email"
+                    autoComplete="email"
+                />
+            </div>
+
+            <div className="mb-6">
+                <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-semibold text-rose-900"
+                >
+                    Password
+                </label>
+
+                <input
+                    className="w-full rounded-xl border border-pink-200 bg-pink-50/70 p-3.5 text-rose-950 placeholder:text-rose-300 outline-none transition duration-200 focus:border-pink-400 focus:bg-white focus:ring-4 focus:ring-pink-100"
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={user.password}
+                    onChange={(e) =>
+                        setUser({
+                            ...user,
+                            password: e.target.value,
+                        })
+                    }
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                />
+            </div>
+
+            <button
+                onClick={onLogin}
+                disabled={buttonDisabled || loading}
+                className="w-full rounded-xl bg-linear-to-r from-pink-500 to-rose-500 p-3.5 font-bold text-white shadow-lg shadow-pink-300/40 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-300/50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+            >
+                {loading
+                    ? "Logging in..."
+                    : buttonDisabled
+                        ? "Please fill all the fields"
+                        : "Login ♡"}
+            </button>
+
+            <div className="mt-7 text-center">
+                <p className="text-sm text-rose-800/70">
+                    Don&apos;t have an account?{" "}
+                    <Link
+                        href="/signup"
+                        className="font-bold text-pink-600 underline decoration-pink-300 underline-offset-4 transition hover:text-rose-800"
+                    >
+                        Sign up
+                    </Link>
+                </p>
+            </div>
+
+            <div className="mt-7 border-t border-pink-100 pt-5 text-center">
+                <p className="text-xs tracking-wide text-pink-400">
+                    Made with ♥ and a little code
+                </p>
+            </div>
+
         </div>
-    )
+    </div>
+);
 }
